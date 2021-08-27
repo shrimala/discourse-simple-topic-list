@@ -1,0 +1,68 @@
+.topic-list th.posters {
+    text-align: right;
+    padding-right: 23px;
+}
+
+$avatar-size: 29px;
+
+
+.topic-list td.posters {
+    //opacity: 0;
+    //display: flex;
+    //flex-direction: row-reverse;
+    //padding-right: 20px;
+    //margin-top: 6px;
+	
+	// Change the avatar size.
+
+    // we know there are up to 4 avatars of fixed size
+    // will be overridden by media width queries on narrow displays to 1 avatar's width
+    width: (4 * $avatar-size) + 21;
+	height: $avatar-size + 4;
+	> a {
+	  &.posters-more-count {
+	    line-height: $avatar-size;
+	  }
+	}
+	img {
+	  height: $avatar-size;
+	  width: $avatar-size;
+	}
+	
+	> :first-child {
+	  display:none;
+	}
+}
+.topic-list td.opening-poster {
+  opacity: 1;
+  width: $avatar-size + 4;
+	img {
+	  height: $avatar-size;
+	  width: $avatar-size;
+	}
+	> :first-child {
+	  display:inline;
+	}
+}
+
+.topic-list td.date-range {
+    span.date-range {
+        white-space: nowrap;
+    }
+    span.date-range > *:not(:first-child):before {
+        content: '-';
+        padding-left:0.1em;
+        padding-right:0.35em;
+    }
+}
+
+.topic-list tr {
+  &:hover {
+    td.date-range, td.posters {
+	  //opacity: 1; 
+	  //transition-property: opacity;
+	  //transition-delay: 200ms;
+	  //transition-duration: 800ms;
+	}
+  }
+}

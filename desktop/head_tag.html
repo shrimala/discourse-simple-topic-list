@@ -1,0 +1,101 @@
+<script type='text/x-handlebars' data-template-name='list/topic-list-item.raw'>
+{{~raw-plugin-outlet name="topic-list-before-columns"}}
+
+{{#if bulkSelectEnabled}}
+  <td class="bulk-select">
+    <input type="checkbox" class="bulk-select">
+  </td>
+{{else}}
+  {{#if showPosters}}
+    <td class='posters opening-poster'>
+      <a href="{{topic.featuredUsers.[0].user.path}}" data-user-card="{{topic.featuredUsers.[0].user.username}}" class="{{topic.featuredUsers.[0].extraClasses}}">{{avatar topic.featuredUsers.[0] avatarTemplatePath="user.avatar_template" usernamePath="user.username" namePath="user.name" imageSize="small"}}</a>
+    </td>
+  {{/if}}
+{{/if}}
+
+
+{{!--
+  The `~` syntax strip spaces between the elements, making it produce
+  `<a class=topic-post-badges>Some text</a><span class=topic-post-badges>`,
+  with no space between them.
+  This causes the topic-post-badge to be considered the same word as "text"
+  at the end of the link, preventing it from line wrapping onto its own line.
+--}}
+<td class='main-link clearfix' colspan="1">
+  {{~raw-plugin-outlet name="topic-list-before-link"}}
+  <span class='link-top-line'>
+    {{~raw-plugin-outlet name="topic-list-before-status"}}
+    {{~raw "topic-status" topic=topic}}
+    {{~topic-link topic class="raw-link raw-topic-link"}}
+    {{~#if topic.featured_link}}
+		{{~topic-featured-link topic}}
+    {{~/if}}
+    {{~raw-plugin-outlet name="topic-list-after-title"}}
+    {{~raw "list/unread-indicator" includeUnreadIndicator=includeUnreadIndicator 
+                                   topicId=topic.id 
+                                   unreadClass=unreadClass~}}
+    {{~#if showTopicPostBadges}}
+    {{~raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
+    {{~/if}}
+  </span>
+  <div class="link-bottom-line">
+    {{#unless hideCategory}}
+      {{#unless topic.isPinnedUncategorized}}
+        {{category-link topic.category}}
+      {{/unless}}
+    {{/unless}}
+    {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
+    {{raw "list/action-list" topic=topic postNumbers=topic.liked_post_numbers className="likes" icon="heart"}}
+  </div>
+  {{#if expandPinned}}
+    {{raw "list/topic-excerpt" topic=topic}}
+  {{/if}}
+</td>
+
+<td class='date-range'>
+    <span class="date-range">
+	    <span class="{{cold-age-class topic.createdAt startDate=topic.bumpedAt class=""}} created-at" title="{{html-safe topic.createdAtTitle}}">
+            <a class="post-activity" href="{{topic.firstPostUrl}}">
+                {{~raw-plugin-outlet name="topic-list-before-relative-date"~}}
+                {{~format-date topic.createdAt format="tiny" noTitle="true"~}}
+            </a>
+        </span>
+        {{#if (format-date-range-end topic.createdAt topic.bumpedAt returnBool="true") }}
+            <a class="post-activity" href="{{topic.lastPostUrl}}">
+                {{~raw-plugin-outlet name="topic-list-before-relative-date"~}}
+                {{~format-date-range-end topic.createdAt topic.bumpedAt format="medium" leaveAgo="true"~}}
+            </a>
+        {{/if}}
+    </span>
+</td>
+
+{{#if showPosters}}
+  {{raw "list/posters-column" posters=topic.featuredUsers }}
+{{/if}}
+
+</script>
+
+
+<script type='text/x-handlebars' data-template-name='topic-list-header.raw'>
+{{#if bulkSelectEnabled}}
+  <th class="bulk-select">
+    {{#if canBulkSelect}}
+      {{raw "flat-button" class="bulk-select" icon="list" title="topics.bulk.toggle"}}
+    {{/if}}
+  </th>
+{{/if}}
+
+{{#unless bulkSelectEnabled}}
+    {{#if showPosters}}
+      {{raw "topic-list-header-column" className='opening-poster' showBulkToggle=toggleInTitle canBulkSelect=canBulkSelect }}
+    {{/if}}
+{{/unless}}
+
+{{raw "topic-list-header-column" order='default' name=listTitle bulkSelectEnabled=bulkSelectEnabled canBulkSelect=canBulkSelect }}
+{{raw "topic-list-header-column" sortable=sortable number='true' order='activity' name='activity'}}
+{{#if showPosters}}
+    {{raw "topic-list-header-column" name='replies'}}
+{{/if}}
+
+
+</script>
